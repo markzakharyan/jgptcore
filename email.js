@@ -12,25 +12,49 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+function generateHtml(data) {
+  let htmlContent = fs.readFileSync(path.join(__dirname, 'emailTemplate.html'), 'utf8');
+  injectedHtml = '';
+
+  data.forEach(item => {
+    injectedHtml += `
+          <li>
+              <h3>${item.author}</h3>
+              <p>${item.content}</p>
+          </li>
+      `;
+  });
+
+  htmlContent = htmlContent.replace('{{content}}', injectedHtml);
+
+  return htmlContent;
+}
+
+
+
 
 // Function to fetch data from Firestore
 async function fetchData() {
-  const snapshot = await db.collection('message_batches').orderBy('timestamp').get();
+  const currentDate = new Date().toISOString().split('T')[0]
+
+  // const snapshot = await db.collection('message_batches').doc(currentDate).collection('messages').orderBy('timestamp').get();
+  const snapshot = await db.collection('message_batches').doc("2023-06-16").collection('messages').orderBy('timestamp').get();
 
   let emailBodyText = '';
-  let messageListHTML = '';
+  let messageListHTML = [];
 
   snapshot.forEach(doc => {
-    const { author, content } = doc.data();
-    emailBodyText += `${author} => ${content}\n`;
-    messageListHTML += `<li style="margin-bottom: 10px;"><strong>${author}</strong>: ${content}</li>`;
+    const messages = doc.data()["messages"];
+    messages.forEach(message => {
+      const author = message.author;
+      const content = message.content;
+      emailBodyText += `${author} => ${content}\n\n`;
+      messageListHTML.push(message);
+    });
+
   });
 
-  // Read the HTML template
-  let emailTemplate = fs.readFileSync(path.join(__dirname, 'emailTemplate.html'), 'utf8');
-
-  // Inject data into the HTML template
-  emailTemplate = emailTemplate.replace('<!-- Data will be injected here -->', messageListHTML);
+  let emailTemplate = generateHtml(messageListHTML);
 
   return { text: emailBodyText, html: emailTemplate };
 }
@@ -64,13 +88,13 @@ async function sendEmail(subject, text, html) {
 
 
 // Schedule the functions to run every 24 hours
-setInterval(async () => {
-  const emailBody = await fetchData();
-  await sendEmail(emailBody);
-}, 24 * 60 * 60 * 1000);
+// setInterval(async () => {
+//   const emailBody = await fetchData();
+//   await sendEmail(emailBody);
+// }, 24 * 60 * 60 * 1000);
 
 async function main() {
   const emailBody = await fetchData();
-  await sendEmail(emailBody);
+  await sendEmail("subject thingy", emailBody.text, emailBody.html);
 }
 main();

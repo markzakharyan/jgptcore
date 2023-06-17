@@ -1,15 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Weekly Recap: Messages Summary</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            font-size: 36px;
+            color: #2980b9;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            font-style: italic;
+            color: #2c3e50;
+            margin-bottom: 2px;
+            font-size: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        p {
+            margin-left: 20px;
+        }
+
+        .container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
+
 <body>
-    <h1 style="font-family: Arial, sans-serif; text-align: center;">Weekly Recap: Messages Summary</h1>
-    <hr>
-    <img src="https://static.vecteezy.com/system/resources/previews/000/677/302/original/abstract-technology-banner-background.jpg" alt="Banner" style="width: 100%;">
-    <ol style="font-family: 'Courier New', monospace;" id="messages-list">
-        <!-- Data will be injected here -->
-    </ol>
+    <div class="container">
+        <h2>Weekly Recap</h2>
+        <ul>
+            {{content}}
+        </ul>
+    </div>
 </body>
+
 </html>

@@ -123,12 +123,11 @@ client.on('messageCreate', async (message) => {
       conversationLog = conversationLog.slice(-6);
     }
 
-    // let result = await openai.createChatCompletion({
-    //   model: 'gpt-4',
-    //   messages: [system_message, ...conversationLog],
-    // });
-
-    // result = result.data.choices[0].message.content;
+    let result = await openai.createChatCompletion({
+      model: 'gpt-4',
+      messages: [system_message, ...conversationLog],
+    });
+    result = result.data.choices[0].message.content;
 
 
     // TO SAVE MY API CREDITS
@@ -140,19 +139,20 @@ client.on('messageCreate', async (message) => {
 
     // Author4: content4`;
 
-    let result = "Author1: ";
-    for (let i = 0; i < 2100; i++) {
-      result += "a";
-    }
+    // let result = "Author1: ";
+    // for (let i = 0; i < 2100; i++) {
+    //   result += "a";
+    // }
 
 
     conversationLog.push({ role: 'assistant', content: result });
 
     newMessageIds = [];
 
-    // split result into 2000 character chunks
+    // split result into chunks delimmited by \n and then trim, and then by 2000 characters
     if (chunks.length === 0)
-      chunks = result.match(/[\s\S]{1,2000}/g) || [];
+      result.split('\n\n').reduce((acc, content) => acc.concat(content.match(/[\s\S]{1,2000}/g) || []), []);
+
 
     currentDailyMessages++;
     const originalChunkLength = chunks.length;
@@ -160,12 +160,16 @@ client.on('messageCreate', async (message) => {
     while (chunks.length > 0) {
       if (chunks.length === originalChunkLength) {
         newMessageIds.push((await message.reply(chunks.shift())).id);
+
       } else {
-        newMessageIds.push((await message.channel.send(chunks.shift())).id);
+        newMessageIds.push((await message.reply(chunks.shift())).id);
+
+        // newMessageIds.push((await message.channel.send(chunks.shift())).id);
       }
     }
+    chunks = [];
 
-    // await addToDB(result, newMessageIds, message.id);
+    await addToDB(result, newMessageIds, message.id);
 
   } catch (error) {
     console.log(`JGPT encountered an error: ${error}`);
@@ -187,7 +191,7 @@ async function addToDB(message, ids, prevId) {
       let author = thing[0];
       thing.shift();
       let content = thing.join(": ");
-      // thing[0], thing.shift().join(": ")
+
       messagesArray.push({
         author, content
       });
@@ -198,7 +202,7 @@ async function addToDB(message, ids, prevId) {
 
 const currentDate = new Date().toISOString().split('T')[0]; // e.g. "2023-06-17", so year-month-day
 
-// Ensure the date document exists
+// Ensure the date document exists... unnecessary & extraneous for some reason so commented out
 // await db.collection('message_batches').doc(currentDate).set({}, { merge: true });
 
 // Add a new message document to the subcollection within the date document
