@@ -1,0 +1,138 @@
+<!doctype html>
+<html ⚡4email data-css-strict lang="en">
+<head>
+    <meta charset="utf-8">
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
+    <style amp4email-boilerplate>
+        body { visibility: hidden }
+    </style>
+    <style amp-custom>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            font-size: 36px;
+            color: #2980b9;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            font-style: italic;
+            color: #2c3e50;
+            margin-bottom: 2px;
+            font-size: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        p {
+            margin-left: 20px;
+        }
+
+        .container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        amp-selector[role=tablist].tabs-with-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        amp-selector[role=tablist].tabs-with-flex [role=tab] {
+            flex-grow: 1;
+            /* custom styling, feel free to change */
+            text-align: center;
+            padding: .5rem;
+        }
+        amp-selector[role=tablist].tabs-with-flex [role=tab][selected] {
+            outline: none;
+            /* custom styling, feel free to change */
+            border-bottom: 2px solid #005AF0;
+        }
+        amp-selector[role=tablist].tabs-with-flex [role=tabpanel] {
+            display: none;
+            width: 100%;
+            order: 1; /* must be greater than the order of the tab buttons to flex to the next line */
+            padding: 2rem;
+        }
+        amp-selector[role=tablist].tabs-with-flex [role=tab][selected] + [role=tabpanel] {
+            display: block;
+        }
+
+        /* Styles for the selector based tabs */
+        amp-selector[role=tablist].tabs-with-selector {
+            display: flex;
+        }
+        amp-selector[role=tablist].tabs-with-selector [role=tab][selected] {
+            outline: none;
+            border-bottom: 2px solid #005AF0;
+        }
+        amp-selector[role=tablist].tabs-with-selector {
+            display: flex;
+        }
+        amp-selector[role=tablist].tabs-with-selector [role=tab] {
+          /* custom styling, feel free to change */
+          width: 100%;
+          text-align: center;
+          padding: .5rem;
+        }
+        amp-selector.tabpanels [role=tabpanel] {
+          display: none;
+          /* custom styling, feel free to change */
+          padding: 2rem;
+        }
+        amp-selector.tabpanels [role=tabpanel][selected] {
+          outline: none;
+          display: block;
+        }
+
+    </style>
+</head>
+<body>
+    <h5 style="text-align: center; color: #005AF0; font-style: italic;">
+        This is a dynamic email⚡! Click through the tabs to select each day.
+    </h5>
+    <amp-selector class="tabs-with-flex" role="tablist" keyboard-select-mode="focus">
+        <div id="tab1" role="tab" aria-controls="tabpanel1" option selected>Monday</div>
+        <div id="tabpanel1" role="tabpanel" aria-labelledby="tab1">
+            <div class="container">
+                <h2>Monday Recap</h2>
+                <ul>
+                    {{monday_content}}
+                </ul>
+            </div>
+        </div>
+        <div id="tab2" role="tab" aria-controls="tabpanel2" option>Wednesday</div>
+        <div id="tabpanel2" role="tabpanel" aria-labelledby="tab2">
+            <div class="container">
+                <h2>Wednesday Recap</h2>
+                <ul>
+                    {{wednesday_content}}
+                </ul>
+            </div>
+        </div>
+        <div id="tab3" role="tab" aria-controls="tabpanel3" option>Friday</div>
+        <div id="tabpanel3" role="tabpanel" aria-labelledby="tab3">
+            <div class="container">
+                <h2>Friday Recap</h2>
+                <ul>
+                    {{friday_content}}
+                </ul>
+            </div>
+        </div>
+    </amp-selector>
+</body>
+</html>

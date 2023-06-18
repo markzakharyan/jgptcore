@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Client, IntentsBitField, ActivityType } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
-const admin = require('firebase-admin');
+const db = require('../firestore-helper').db;
 const fs = require('fs');
 const schedule = require('node-schedule');
 
@@ -17,14 +17,6 @@ function readFileContent(filePath) {
 }
 
 const prompt = readFileContent('./prompt.txt').trim();
-
-const serviceAccount = JSON.parse(process.env['SERVICE_ACCOUNT_JSON']);
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-const db = admin.firestore();
 
 
 const client = new Client({
